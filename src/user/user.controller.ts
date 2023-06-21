@@ -30,13 +30,8 @@ export class UserController {
     description: 'Error , Maybe user already signed up',
   })
   async signup(@Body() userData: SignupDto) {
-    try {
-      const response = await this.userservice.signUp(userData);
-      return response;
-    } catch (error) {
-      Logger.error(error);
-      throw new BadRequestException('invaild data');
-    }
+    const response = await this.userservice.signUp(userData);
+    return response;
   }
 
   @Get(':id')

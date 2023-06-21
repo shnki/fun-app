@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -24,7 +24,7 @@ export class UserService {
    * @param {userdata} userData - The user data including name, email, latitude, and longitude.
    * @returns {User|string} returns the user if the user is a US resident or a message as a string to inform the user is not US resident.
    */
-  async signUp(userData: userdata) {
+  async signUp(userData: userdata): Promise<User> {
     const geo = await this.userGeoloactionService.getUserGeo(
       userData.latitude,
       userData.longitude,
@@ -36,12 +36,15 @@ export class UserService {
         state: geo.state,
         city: geo.city,
       };
-
-      const newUser = this.userRepository.create(user);
-      await this.userRepository.save(newUser);
-      return newUser;
+      try {
+        const newUser = this.userRepository.create(user);
+        await this.userRepository.save(newUser);
+        return newUser;
+      } catch (error) {
+        throw new BadRequestException('invalid data');
+      }
     }
-    return `Can't sign up, User's not a US resident`;
+    throw new BadRequestException(`Can't sign up, User is not a US resident`);
   }
 
   /**
@@ -52,7 +55,9 @@ export class UserService {
    */
   async getUser(userId: number): Promise<User> {
     const user = await this.userRepository.findOneBy({ id: userId });
-    delete user.id;
+    if (user) {
+      delete user.id;
+    }
     return user;
   }
 }

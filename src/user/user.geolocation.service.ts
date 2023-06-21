@@ -32,7 +32,10 @@ export class UserGeoLocationService {
       if (addressComponent.types.includes('administrative_area_level_1')) {
         userLocation.state = addressComponent.long_name;
       }
-      if (addressComponent.types.includes('locality')) {
+      if (
+        addressComponent.types.includes('locality') ||
+        addressComponent.types.includes('sublocality')
+      ) {
         userLocation.city = addressComponent.long_name;
       }
     }

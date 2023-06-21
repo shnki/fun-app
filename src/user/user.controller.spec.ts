@@ -4,6 +4,8 @@ import { UserService } from './user.service';
 
 describe('UserController', () => {
   let controller: UserController;
+  let service: UserService;
+
   const mockedid = 1;
   const mockedUser = {
     name: 'sam',

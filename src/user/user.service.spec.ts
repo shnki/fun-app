@@ -2,6 +2,8 @@ import { UserService } from './user.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './user.entity';
+import { BadRequestException } from '@nestjs/common';
+
 import { UserGeoLocationService } from './user.geolocation.service';
 import { ConfigService } from '@nestjs/config';
 import { Repository } from 'typeorm';
@@ -24,6 +26,7 @@ describe('UserService', () => {
   };
 
   const mockedId = 123;
+  const mockedNotFoundId = 321;
   const mockedGeo = {
     country: 'United States',
     state: 'California',
@@ -45,7 +48,7 @@ describe('UserService', () => {
         {
           provide: getRepositoryToken(User),
           useValue: {
-            findOneBy: jest.fn((x) => mockedUser),
+            findOneBy: jest.fn((mockedId) => mockedUser),
             create: jest.fn((x) => mockedUser),
             save: jest.fn(),
           },
@@ -66,8 +69,17 @@ describe('UserService', () => {
   describe('getUser', () => {
     it('should get user by id given', async () => {
       const result = await service.getUser(mockedId);
-      expect(result).toBe(mockedUser);
       expect(userRepository.findOneBy).toHaveBeenCalledWith({ id: mockedId });
+      expect(result).toBe(mockedUser);
+    });
+    it('should return undfined or null when user does not exist', async () => {
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(null);
+
+      const result = await service.getUser(mockedNotFoundId);
+      expect(userRepository.findOneBy).toHaveBeenCalledWith({
+        id: mockedNotFoundId,
+      });
+      expect(result).toBe(null);
     });
   });
 
@@ -76,20 +88,20 @@ describe('UserService', () => {
       const result = await service.signUp(mockedDto);
       expect(result).toBe(mockedUser);
     });
+
     it('shoud return error message when the user is not a US resident', async () => {
       jest.spyOn(userGeoloactionService, 'getUserGeo').mockResolvedValueOnce({
         country: 'Canada',
         state: 'Ontario',
         city: 'Toronto',
       });
-      const result = await service.signUp(mockedDto);
+
+      await expect(service.signUp(mockedDto)).rejects.toThrow(
+        BadRequestException,
+      );
+
       expect(userRepository.save).not.toHaveBeenCalled();
-      expect(userRepository.create);
-      expect(result).toBe("Can't sign up, User's not a US resident");
+      expect(userRepository.create).not.toHaveBeenCalled();
     });
   });
-
-  //   it('userRepository Should be defined', () => {
-  //     expect(userRepository).toBeDefined;
-  //   });
 });
