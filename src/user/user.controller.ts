@@ -13,13 +13,22 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { SignupDto } from './dto/signup.dto';
-
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userservice: UserService) {}
 
   @Post('signup')
   @UsePipes(new ValidationPipe())
+  @ApiCreatedResponse({ description: 'User created' })
+  @ApiBadRequestResponse({
+    description: 'Error , Maybe user already signed up',
+  })
   async signup(@Body() userData: SignupDto) {
     try {
       const response = await this.userservice.signUp(userData);

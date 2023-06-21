@@ -1,12 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { User } from './user.entity';
-import { Logger } from '@nestjs/common';
 
 describe('UserController', () => {
   let controller: UserController;
-  let service: UserService;
   const mockedid = 1;
   const mockedUser = {
     name: 'sam',
