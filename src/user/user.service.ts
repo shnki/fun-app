@@ -18,7 +18,12 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
-
+  /**
+   * Signs up a user.
+   *
+   * @param {userdata} userData - The user data including name, email, latitude, and longitude.
+   * @returns {User|string} returns the user if the user is a US resident or a message as a string to inform the user is not US resident.
+   */
   async signUp(userData: userdata) {
     const geo = await this.userGeoloactionService.getUserGeo(
       userData.latitude,
@@ -39,6 +44,12 @@ export class UserService {
     return `Can't sign up, User's not a US resident`;
   }
 
+  /**
+   * Retrieves a user by their ID.
+   *
+   * @param {number} userId - The ID of the user to retrieve.
+   * @returns {User} The user with the specified ID.
+   */
   async getUser(userId: number): Promise<User> {
     const user = await this.userRepository.findOneBy({ id: userId });
     delete user.id;
