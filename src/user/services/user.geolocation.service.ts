@@ -8,7 +8,7 @@ export class UserGeoLocationService {
   constructor(private readonly configService: ConfigService) {}
 
   /**
-   * Retrieves the user's geolocation information(country, state, and city) based on latitude and longitude.
+   * Retrieves the user's geolocation information(country, state and city) based on latitude and longitude.
    *
    * @param {number} latitude - The latitude of the user's location.
    * @param {number} longitude - The longitude of the user's location.

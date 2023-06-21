@@ -1,10 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
-import { UserService } from './user.service';
+import { UserService } from './services/user.service';
 
 describe('UserController', () => {
   let controller: UserController;
-  let service: UserService;
 
   const mockedid = 1;
   const mockedUser = {
@@ -35,7 +34,6 @@ describe('UserController', () => {
     }).compile();
 
     controller = module.get<UserController>(UserController);
-    service = module.get<UserService>(UserService);
   });
 
   it('should be defined', () => {
@@ -43,8 +41,6 @@ describe('UserController', () => {
   });
   describe('getUser', () => {
     it('should get a user by id ', async () => {
-      //  jest.spyOn(service, 'getUser').mockResolvedValue(mockedUser);
-
       const result = await controller.getUser(mockedid);
       expect(result).toBe(mockedUser);
     });

@@ -1,9 +1,8 @@
 import { UserService } from './user.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User } from '../entities/user.entity';
 import { BadRequestException } from '@nestjs/common';
-
 import { UserGeoLocationService } from './user.geolocation.service';
 import { ConfigService } from '@nestjs/config';
 import { Repository } from 'typeorm';
@@ -48,7 +47,7 @@ describe('UserService', () => {
         {
           provide: getRepositoryToken(User),
           useValue: {
-            findOneBy: jest.fn((mockedId) => mockedUser),
+            findOneBy: jest.fn((x) => mockedUser),
             create: jest.fn((x) => mockedUser),
             save: jest.fn(),
           },
@@ -72,6 +71,7 @@ describe('UserService', () => {
       expect(userRepository.findOneBy).toHaveBeenCalledWith({ id: mockedId });
       expect(result).toBe(mockedUser);
     });
+
     it('should return undfined or null when user does not exist', async () => {
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(null);
 

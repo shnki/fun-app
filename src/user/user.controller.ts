@@ -8,16 +8,15 @@ import {
   Param,
   ParseIntPipe,
   NotFoundException,
-  BadRequestException,
-  Logger,
 } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UserService } from './services/user.service';
 import { SignupDto } from './dto/signup.dto';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiTags,
 } from '@nestjs/swagger';
+
 @ApiTags('User')
 @Controller('user')
 export class UserController {

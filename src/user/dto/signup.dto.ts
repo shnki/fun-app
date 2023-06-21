@@ -11,7 +11,7 @@ export class SignupDto {
   @IsNotEmpty({ message: 'email is required' })
   @IsEmail()
   @ApiProperty({
-    example: 'daredevil@hotmail.com',
+    example: 'username@example.com',
   })
   email: string;
 
@@ -19,6 +19,7 @@ export class SignupDto {
   @IsNumber()
   @ApiProperty({
     example: 39.57336,
+    description: 'the latitude of the US resident user ',
   })
   latitude: number;
 
@@ -26,6 +27,7 @@ export class SignupDto {
   @IsNumber()
   @ApiProperty({
     example: -116.017411,
+    description: 'the longitude of the US resident user ',
   })
   longitude: number;
 }
