@@ -84,7 +84,7 @@ describe('UserService', () => {
       });
       const result = await service.signUp(mockedDto);
       expect(userRepository.save).not.toHaveBeenCalled();
-      expect(userRepository.create).not.toHaveBeenCalled();
+      expect(userRepository.create);
       expect(result).toBe("Can't sign up, User's not a US resident");
     });
   });

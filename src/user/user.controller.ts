@@ -23,7 +23,7 @@ export class UserController {
   async signup(@Body() userData: SignupDto) {
     try {
       const response = await this.userservice.signUp(userData);
-      return { message: response };
+      return response;
     } catch (error) {
       Logger.error(error);
       throw new BadRequestException('invaild data');
