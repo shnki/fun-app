@@ -40,8 +40,8 @@ export class UserService {
   }
 
   async getUser(userId: number): Promise<User> {
-    return await this.userRepository.findOneBy({
-      id: userId,
-    });
+    const user = await this.userRepository.findOneBy({ id: userId });
+    delete user.id;
+    return user;
   }
 }
